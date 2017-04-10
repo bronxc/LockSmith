@@ -27,12 +27,18 @@ DECRYPTION PROCESS with End-to-End feature:
 FAQs:
 
 How long is the AES key?
+
 -> 256 bits
+
 How long is the RSA key pair?
+
 -> 2048 bits
 What files formats can I encrypt?
+
 -> for now it's only text (.txt) files. We will add other formats to it in the future updates.
+
 Only XML format of the RSA key pair is usable, right?
+
 -> right! for now :)
 
 
