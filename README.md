@@ -8,7 +8,7 @@ This appliocation for now is only capable of doing Ecryption/Decryption on text 
 
 ENCRYPTION PROCESS without End-to-End feature:
   
-  In this method which completely unsafe and not recommended, we specifiy a text file or we can type our message directly in the big textbox inside the application and click on encrypt button. An AES-256 bits and an AES Vector will be generated. AES is a symmetric key which will be used for both encryption and decryption. Using the AES key and vector, we encrypt our text file. This process will result in a byte array representing the encrypted file. The first 4 bytes of the file will hold spacew for our AES-256 bit key. The second 4 bytes of the file will be the AES vector. Then we add the encrypted bytes and save the file with .enc extension.
+  In this method which completely unsafe and not recommended, we specifiy a text file or we can type our message directly in the big textbox inside the application and click on encrypt button. An AES-256 bits Key and an AES Vector will be generated. AES is a symmetric key which will be used for both encryption and decryption. Using the AES key and vector, we encrypt our text file. This process will result in a byte array representing the encrypted file. The first 4 bytes of the file will hold spacew for our AES-256 bit key. The second 4 bytes of the file will be the AES vector. Then we add the encrypted bytes and save the file with .enc extension.
 
 DECRYPTION PROCESS without End-to-End feature:
 
