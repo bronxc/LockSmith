@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Security;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace cryptokey
 {
@@ -77,8 +79,14 @@ namespace cryptokey
                 StreamReader srpub = new StreamReader(PubKeyFile);
                 string rsapubkeytext = srpub.ReadToEnd();
                 srpub.Close();
-                
-                rsa.FromXmlString(rsapubkeytext);
+                try
+                {
+                    rsa.FromXmlString(rsapubkeytext);
+                }
+                catch (XmlSyntaxException)
+                {
+                    MessageBox.Show("The Key is invalid", "Invalid Key Pair", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return rsa;
             }
             else
@@ -96,8 +104,16 @@ namespace cryptokey
                 string rsaprikeytext = srpri.ReadToEnd();
                 srpri.Close();
                 //importing the private key to rsa object
-                rsa.FromXmlString(rsaprikeytext);
+                try
+                {
+                    rsa.FromXmlString(rsaprikeytext);
+                    
+                }catch(XmlSyntaxException)
+                {
+                    MessageBox.Show("The Key is invalid", "Invalid Key Pair", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return rsa;
+
             }
 
         }
@@ -123,8 +139,16 @@ namespace cryptokey
 
             //no persisting the key in container
             rsa.PersistKeyInCsp = false;
-
-            byte[] aesDecryptedKey = rsa.Decrypt(aesEncryptedKey, false);
+            byte[] aesDecryptedKey = new byte[4];
+            try
+            {
+                aesDecryptedKey = rsa.Decrypt(aesEncryptedKey, false);
+            }
+            catch (CryptographicException)
+            {
+                MessageBox.Show("Are you sure the file is an encrypted file? or your using the right key? Check again!!",
+                    "You may be mistaken", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             return aesDecryptedKey;
         }
@@ -310,12 +334,12 @@ namespace cryptokey
                 }
                 ICryptoTransform transform;
                 if (endtoend)
-                {
-                    transform = rjndl.CreateDecryptor(KeyDecrypted, IV);
+                { 
+                        transform = rjndl.CreateDecryptor(KeyDecrypted, IV);
                 }
                 else
                 {
-                    transform = rjndl.CreateDecryptor(Key, IV);
+                        transform = rjndl.CreateDecryptor(Key, IV);
                 }
                 
                 // Decrypt the cipher text from
