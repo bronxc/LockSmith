@@ -6,3 +6,11 @@ C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmit
 C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Debug\LockSmith.exe
 C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Debug\LockSmith.pdb
 C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Debug\LockSmith.csprojResolveAssemblyReference.cache
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\bin\Debug\LockSmith.exe
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\bin\Debug\LockSmith.pdb
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\obj\Debug\LockSmith.csprojResolveAssemblyReference.cache
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\obj\Debug\LockSmith2.Form2.resources
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\obj\Debug\LockSmith.Properties.Resources.resources
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\obj\Debug\LockSmith.csproj.GenerateResource.Cache
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\obj\Debug\LockSmith.exe
+C:\Users\thebigbrother\Documents\GitHub\LockSmith\LockSmith2\obj\Debug\LockSmith.pdb

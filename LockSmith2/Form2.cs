@@ -65,9 +65,10 @@ namespace LockSmith2
                 }
                 else
                 {
-                    
+
                     File.WriteAllText(msgPath, richTextBox1.Text);
                     string cleartext = msgPath;
+                    string ext = Path.GetExtension(cleartext);
 
                     handlekeys Box = new handlekeys();
 
@@ -81,25 +82,25 @@ namespace LockSmith2
                             {
                                 MessageBox.Show("Public key file bigger than usual. Are you trying to trick me?", "Invalid Public Key", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
-                            else if(pubkeyinfo.Length < 415)
+                            else if (pubkeyinfo.Length < 415)
                             {
                                 MessageBox.Show("Public key file smaller than usual. Are you trying to trick me?", "Invalid Public Key", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             else
                             {
-                                Box.AesEncrypt(cleartext, true, PubKeyPathTextBox.Text);
+                                Box.AesEncrypt(cleartext, true, ext, PubKeyPathTextBox.Text);
                             }
                         }
                         else
                         {
-                            Box.AesEncrypt(cleartext, true);
+                            Box.AesEncrypt(cleartext, true, ext);
                         }
-                        
+
                     }
                     else
                     {
 
-                        Box.AesEncrypt(cleartext, false);
+                        Box.AesEncrypt(cleartext, false, ext);
                     }
                 }
             }
@@ -124,13 +125,17 @@ namespace LockSmith2
                     {
                         MessageBox.Show("File too big!", "Big File", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else if(filetoencrypt.Length <= 8)
+                    else if (filetoencrypt.Length <= 8)
                     {
                         MessageBox.Show("File too Small!", "Small File", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
                         string unEnc = filePathTextBox.Text;
+
+                        //Get the extention of the file
+                        string ext = Path.GetExtension(unEnc);
+
                         handlekeys Box = new handlekeys();
 
                         //checking for End-to-End
@@ -138,16 +143,16 @@ namespace LockSmith2
                         {
                             if (haveRSAKeyPair.Checked)
                             {
-                                Box.AesEncrypt(unEnc, true, PubKeyPathTextBox.Text);
+                                Box.AesEncrypt(unEnc, true, ext, PubKeyPathTextBox.Text);
                             }
                             else
                             {
-                                Box.AesEncrypt(unEnc, true);
+                                Box.AesEncrypt(unEnc, true, ext);
                             }
                         }
                         else
                         {
-                            Box.AesEncrypt(unEnc, false);
+                            Box.AesEncrypt(unEnc, false, ext);
                         }
                     }
                 }

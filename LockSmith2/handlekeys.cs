@@ -4,6 +4,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Text;
 
 namespace cryptokey
 {
@@ -50,18 +51,39 @@ namespace cryptokey
             //import the RSA public key for encryption
             rsa = importRSAkeypair(rsa, false, publickey);
 
-            //persisting the key in container
-            rsa.PersistKeyInCsp = true;
+            if (rsa != null)
+            {
+                //persisting the key in container
+                rsa.PersistKeyInCsp = true;
 
-            //encrypting the aes key and vector
-            byte[] aesKeyEncrypted = rsa.Encrypt(aesKey, false);
+                //encrypting the aes key and vector
+                byte[] aesKeyEncrypted = rsa.Encrypt(aesKey, false);
 
-            // Returning the encrypted AES Key
-            return aesKeyEncrypted;
+                // Returning the encrypted AES Key
+                return aesKeyEncrypted;
+            }
+            else
+            {
+                return null;
+            }
+            
 
         }
 
+        private bool CheckRSAKey(RSACryptoServiceProvider rsa, string rsaXML)
+        {
+            try
+            {
+                rsa.FromXmlString(rsaXML);
+            }
+            catch (XmlSyntaxException)
+            {
+                MessageBox.Show("The Key is invalid", "Invalid Key Pair", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
 
+        }
         private RSACryptoServiceProvider importRSAkeypair(RSACryptoServiceProvider rsa, bool priavte, string publickey = null, string privatekey = null)
         {
             if (priavte == false)
@@ -79,15 +101,18 @@ namespace cryptokey
                 StreamReader srpub = new StreamReader(PubKeyFile);
                 string rsapubkeytext = srpub.ReadToEnd();
                 srpub.Close();
-                try
+
+                bool check = CheckRSAKey(rsa, rsapubkeytext);
+                if (check)
                 {
                     rsa.FromXmlString(rsapubkeytext);
+                    return rsa;
                 }
-                catch (XmlSyntaxException)
+                else
                 {
-                    MessageBox.Show("The Key is invalid", "Invalid Key Pair", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
                 }
-                return rsa;
+                
             }
             else
             {
@@ -104,15 +129,16 @@ namespace cryptokey
                 string rsaprikeytext = srpri.ReadToEnd();
                 srpri.Close();
                 //importing the private key to rsa object
-                try
+                bool check = CheckRSAKey(rsa, rsaprikeytext);
+                if (check)
                 {
                     rsa.FromXmlString(rsaprikeytext);
-                    
-                }catch(XmlSyntaxException)
-                {
-                    MessageBox.Show("The Key is invalid", "Invalid Key Pair", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return rsa;
                 }
-                return rsa;
+                else
+                {
+                    return null;
+                }
 
             }
 
@@ -136,26 +162,33 @@ namespace cryptokey
             {
                 rsa = importRSAkeypair(rsa, true);
             }
-
-            //no persisting the key in container
-            rsa.PersistKeyInCsp = false;
-            byte[] aesDecryptedKey = new byte[4];
-            try
+            if (rsa != null)
             {
-                aesDecryptedKey = rsa.Decrypt(aesEncryptedKey, false);
-            }
-            catch (CryptographicException)
-            {
-                MessageBox.Show("Are you sure the file is an encrypted file? or your using the right key? Check again!!",
-                    "You may be mistaken", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                //no persisting the key in container
+                rsa.PersistKeyInCsp = false;
+                byte[] aesDecryptedKey = new byte[4];
+                try
+                {
+                    aesDecryptedKey = rsa.Decrypt(aesEncryptedKey, false);
+                }
+                catch (CryptographicException)
+                {
+                    MessageBox.Show("Are you sure the file is an encrypted file? or your using the right key? Check again!!",
+                        "You may be mistaken", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
-            return aesDecryptedKey;
+                return aesDecryptedKey;
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
 
 
-        public void AesEncrypt(string plainfile, bool endtoend, string publickey = null)
+        public void AesEncrypt(string plainfile, bool endtoend, string ext, string publickey = null)
         {
             // Create instance of Rijndael for
             // symetric encryption of the data.
@@ -180,22 +213,35 @@ namespace cryptokey
                 }
             }
 
-
-            byte[] LenK = new byte[4];
-            byte[] LenIV = new byte[4];
-
             int lKey;
             if (endtoend)
             {
-               lKey = keyEncrypted.Length;
+                if(keyEncrypted != null)
+                {
+                    lKey = keyEncrypted.Length;
+                }
+                else
+                {
+                    MessageBox.Show("Cannot Encrypt the AES key, so End-to-End encryption couldn't be done and nothing encrypted!!");
+                    return;
+                }
             }
             else
             {
-                lKey = myaes.IV.Length;
+                lKey = myaes.Key.Length;
             }
+
+            byte[] LenK = new byte[4];
+            byte[] LenIV = new byte[4];
+            byte[] extension = Encoding.ASCII.GetBytes(ext);
+
             LenK = BitConverter.GetBytes(lKey);
             int lIV = myaes.IV.Length;
             LenIV = BitConverter.GetBytes(lIV);
+            int LenExt = extension.Length;
+            byte[] Lext = BitConverter.GetBytes(LenExt);
+
+
 
             // Write the following to the FileStream
             // for the encrypted file (outFs):
@@ -214,6 +260,7 @@ namespace cryptokey
 
                 outFs.Write(LenK, 0, 4);
                 outFs.Write(LenIV, 0, 4);
+                outFs.Write(Lext, 0, 4);
                 if (endtoend)
                 {
                     outFs.Write(keyEncrypted, 0, lKey);
@@ -223,6 +270,7 @@ namespace cryptokey
                     outFs.Write(myaes.Key, 0, lKey);
                 }
                 outFs.Write(myaes.IV, 0, lIV);
+                outFs.Write(extension, 0, LenExt);
 
                 // Now write the cipher text using
                 // a CryptoStream for encrypting.
@@ -276,10 +324,9 @@ namespace cryptokey
             // at the beginning of the encrypted package.
             byte[] LenK = new byte[4];
             byte[] LenIV = new byte[4];
+            byte[] LenEXT = new byte[4];
 
-            // Consruct the file name for the decrypted file.
-            string outFile1 = cipherfile.Substring(0, cipherfile.LastIndexOf(".")) + ".txt";
-            string outFile2 = Path.Combine(pathToAes, outFile1);
+
             string inFile = Path.Combine(pathToAes, cipherfile);
 
             // Use FileStream objects to read the encrypted
@@ -292,15 +339,18 @@ namespace cryptokey
                 inFs.Read(LenK, 0, 3);
                 inFs.Seek(4, SeekOrigin.Begin);
                 inFs.Read(LenIV, 0, 3);
+                inFs.Seek(8, SeekOrigin.Begin);
+                inFs.Read(LenEXT, 0, 3);
 
                 // Convert the lengths to integer values.
                 int lenK = BitConverter.ToInt32(LenK, 0);
                 int lenIV = BitConverter.ToInt32(LenIV, 0);
+                int lenEx = BitConverter.ToInt32(LenEXT, 0);
 
                 // Determine the start postition of
                 // the ciphter text (startC)
                 // and its length(lenC).
-                int startC = lenK + lenIV + 8;
+                int startC = lenK + lenIV + lenEx + 12;
                 int lenC = (int)inFs.Length - startC;
 
                 // Create the byte arrays for
@@ -309,11 +359,12 @@ namespace cryptokey
                 byte[] KeyEncrypted = new byte[lenK];
                 byte[] Key = new byte[lenK];
                 byte[] IV = new byte[lenIV];
+                byte[] extention = new byte[lenEx];
 
                 // Extract the key and IV
-                // starting from index 8
+                // starting from index 12
                 // after the length values.
-                inFs.Seek(8, SeekOrigin.Begin);
+                inFs.Seek(12, SeekOrigin.Begin);
                 if (endtoend)
                 {
                     inFs.Read(KeyEncrypted, 0, lenK);
@@ -322,8 +373,13 @@ namespace cryptokey
                 {
                     inFs.Read(Key, 0, lenK);
                 }
-                inFs.Seek(8 + lenK, SeekOrigin.Begin);
+                inFs.Seek(12 + lenK, SeekOrigin.Begin);
                 inFs.Read(IV, 0, lenIV);
+                inFs.Read(extention, 0, lenEx);
+
+                // Consruct the file name for the decrypted file.
+                string outFile1 = cipherfile.Substring(0, cipherfile.LastIndexOf(".")) + "." + Encoding.ASCII.GetString(extention);
+                string outFile2 = Path.Combine(pathToAes, outFile1);
 
                 byte[] KeyDecrypted = new byte[4];
                 if (endtoend)
@@ -331,15 +387,38 @@ namespace cryptokey
                     // Use RSACryptoServiceProvider
                     // to decrypt the Rijndael key.
                     KeyDecrypted = decryptthekey(KeyEncrypted,privatekey);
+                    if(KeyDecrypted == null)
+                    {
+                        MessageBox.Show("Cannot Decrypt the AES key, so End-to-End Decryption couldn't be done and nothing Decrypted!!");
+                        return;
+                    }
                 }
                 ICryptoTransform transform;
                 if (endtoend)
-                { 
+                {  // Changed by Tapani Ojanperä
+                    try
+                    {
                         transform = rjndl.CreateDecryptor(KeyDecrypted, IV);
+                    }
+                    catch (CryptographicException)
+                    {
+                        MessageBox.Show("Are you sure the file is an encrypted file? or your using the right key? Check again!!",
+                   "You may be mistaken", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // Abort
+                    }
                 }
                 else
                 {
+                    try
+                    {
                         transform = rjndl.CreateDecryptor(Key, IV);
+                    }
+                    catch (CryptographicException)
+                    {
+                        MessageBox.Show("Are you sure the file is an encrypted file? or your using the right key? Check again!!",
+                    "You may be mistaken", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // Abort
+                    }
                 }
                 
                 // Decrypt the cipher text from
