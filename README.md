@@ -8,20 +8,20 @@ This appliocation can encrypt "ANY" file format NOW!!!
 
 ENCRYPTION PROCESS without End-to-End feature:
   
-  In this method which completely unsafe and not recommended, we specifiy a text file or we can type our message directly in the big textbox inside the application and click on encrypt button. An AES-256 bits Key and an AES Vector will be generated. AES is a symmetric key which will be used for both encryption and decryption. Using the AES key and vector, we encrypt our text file. This process will result in a byte array representing the encrypted file. The first 4 bytes of the file will hold spacew for our AES-256 bit key. The second 4 bytes of the file will be the AES vector. Then we add the encrypted bytes and save the file with .enc extension.
+  In this method which completely unsafe and not recommended, we specifiy a text file or we can type our message directly in the big textbox inside the application and click on encrypt button. An AES-256 bits Key and an AES Vector will be generated. AES is a symmetric key which will be used for both encryption and decryption. Using the AES key and vector, we encrypt our text file. This process will result in a byte array representing the encrypted file. The first 4 bytes of the file will hold space for the legnth of our AES-256 bit key. The second 4 bytes of the file will be the legnth of AES vector. Then we addd the legnth of our extenton which holds the next 4 bytes. Then we actually write the AES KEY, Vecor and the extension and then the encrypted bytes and save the file with a ".enc" format.
 
 DECRYPTION PROCESS without End-to-End feature:
 
-  We get the file which need to be decrypted (the .enc file). We click on Decrypt. It retrieves the AES-256 bit key from the first 4 bytes of the file and the vector from the second 4 bytes. It creates an AES object with the retrieved key and vector, and it decryptes the file and save the decrypted file to disk.
+  We get the file which need to be decrypted (the .enc file). We click on Decrypt. It retrieves the AES-256 bit key, vector and the extension of the file using the information saved in the beginning og the file during encryption. It creates an AES object with the retrieved key and vector, and it decryptes the file and save the decrypted file to disk with the proper extension.
   
   
 ENCRYPTION PROCESS with End-to-End feature:
 
-  Here's what the whole thing is about. By checking the end-to-end option in the program, The asymmetric AES-256 bit key will be encrypted with the public key of the receiver (or yours if you are encrypting it for yourself) and the first 4 byte of the encrypted (.enc) file will be encrypted and no one can decrypt the file but the intended receiver (owner). This RSA key pair is 2048 bits long and it will be exported to ~Desktop\Locl\ folder in XML format and used for furthur Encryption/Decryption process.
+  The only difference that it makes is that in this process, the AES key will be encrypted with an RSA public key first, then written to the file in the same manner as explained above.
   
 DECRYPTION PROCESS with End-to-End feature:
 
-  The first 4 byte of the encrypted (.enc) file will be retieved and decrypted with the proper Private Key and then used with second 4 bytes of the encrypted (.enc) file which holds the AES vector and the file will be decrypted and written to disk.
+  You pretty much got the idea...
   
   
 FAQs:
@@ -35,7 +35,7 @@ How long is the RSA key pair?
 -> 2048 bits
 What files formats can I encrypt?
 
--> ANY!!! (version 2.0 =<)
+-> ANY!!! (version 2.1 =<)
 
 Only XML format of the RSA key pair is usable, right?
 
