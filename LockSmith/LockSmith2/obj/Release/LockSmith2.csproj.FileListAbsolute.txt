@@ -1,9 +1,0 @@
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\bin\Release\LockSmith2.exe
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\bin\Release\LockSmith2.pdb
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.csprojResolveAssemblyReference.cache
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.Form1.resources
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.Form2.resources
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.Properties.Resources.resources
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.csproj.GenerateResource.Cache
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.exe
-C:\Users\thebigbrother\Documents\Visual Studio 2017\Projects\LockSmith2\LockSmith2\obj\Release\LockSmith2.pdb

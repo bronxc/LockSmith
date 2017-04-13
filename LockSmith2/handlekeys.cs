@@ -378,8 +378,19 @@ namespace cryptokey
                 inFs.Read(extention, 0, lenEx);
 
                 // Consruct the file name for the decrypted file.
-                string outFile1 = cipherfile.Substring(0, cipherfile.LastIndexOf(".")) + "." + Encoding.ASCII.GetString(extention);
-                string outFile2 = Path.Combine(pathToAes, outFile1);
+                string outFile1 = cipherfile.Substring(0, cipherfile.LastIndexOf(".")) + Encoding.ASCII.GetString(extention);
+                string outFile2;
+                try
+                {
+                    MessageBox.Show("Cannot Decrypt the file since it's an invalid file!","Invalid File", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    outFile2 = Path.Combine(pathToAes, outFile1);
+                }
+                catch (ArgumentException)
+                {
+
+                    return;
+                }
+                
 
                 byte[] KeyDecrypted = new byte[4];
                 if (endtoend)
