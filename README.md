@@ -4,7 +4,7 @@ A Simple Cryptography Windows Application
 I'm writing this application in order to remember what I learned when I was 14 joining a local C# programming class and as a school project. I also want to be better in SW development. So, whoever wants to tell me my flaws and teach me how to do programming better, I appreciate him/her a lot!
 
 
-This appliocation for now is only capable of doing Ecryption/Decryption on text files (.txt).
+This appliocation can encrypt "ANY" file format NOW!!!
 
 ENCRYPTION PROCESS without End-to-End feature:
   
@@ -35,7 +35,7 @@ How long is the RSA key pair?
 -> 2048 bits
 What files formats can I encrypt?
 
--> for now it's only text (.txt) files. We will add other formats to it in the future updates.
+-> ANY!!! (version 2.0 =<)
 
 Only XML format of the RSA key pair is usable, right?
 
