@@ -382,12 +382,11 @@ namespace cryptokey
                 string outFile2;
                 try
                 {
-                    MessageBox.Show("Cannot Decrypt the file since it's an invalid file!","Invalid File", MessageBoxButtons.OK,MessageBoxIcon.Error);
                     outFile2 = Path.Combine(pathToAes, outFile1);
                 }
                 catch (ArgumentException)
                 {
-
+                    MessageBox.Show("Cannot Decrypt the file since it's an invalid file!","Invalid File", MessageBoxButtons.OK,MessageBoxIcon.Error);
                     return;
                 }
                 
